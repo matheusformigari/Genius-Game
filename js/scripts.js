@@ -27,8 +27,8 @@ const _soundUrls = [
 ]
 
 _soundUrls.forEach(sndPath => {
-	const audio = new Audio(sndPath);
-	_data.sounds.push(audio);
+	const audio = new Audio(sndPath)
+	_data.sounds.push(audio)
 })
 
 _gui.switch.addEventListener("click", () => {
@@ -73,7 +73,7 @@ const padListener = (e) => {
 
 	e.target.classList.add("game__pad--active")
 
-	_data.sounds[soundId].play
+	_data.sounds[soundId].play()
 	_data.playerSequence.push(soundId)
 
 	setTimeout(() => {
