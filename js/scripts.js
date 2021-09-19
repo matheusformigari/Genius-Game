@@ -8,7 +8,7 @@ const _data = {
 	score: 0,
 	gameSequence: [],
 	playerSequence: []
-};
+}
 
 const _gui = {
 	counter: document.querySelector(".gui__counter"),
@@ -24,12 +24,12 @@ const _soundUrls = [
 	"audio/simonSound2.mp3",
 	"audio/simonSound3.mp3",
 	"audio/simonSound4.mp3"
-];
+]
 
 _soundUrls.forEach(sndPath => {
 	const audio = new Audio(sndPath);
 	_data.sounds.push(audio);
-});
+})
 
 _gui.switch.addEventListener("click", () => {
 	_data.gameOn = _gui.switch.classList.toggle("gui__btn-switch--on")
@@ -44,8 +44,10 @@ _gui.switch.addEventListener("click", () => {
 	_data.playerSequence = []
 
 	disablePads()
+	changePadCursor("auto")
+
 	_gui.led.classList.remove("gui__led--active")
-});
+})
 
 _gui.strict.addEventListener("click", () => {
 	if (!_data.gameOn)
@@ -57,7 +59,7 @@ _gui.strict.addEventListener("click", () => {
 
 _gui.start.addEventListener("click", () => {
 	startGame()
-});
+})
 
 const padListener = (e) => {
 	if (!_data.playerCanPlay)
@@ -74,20 +76,23 @@ const padListener = (e) => {
 	_data.sounds[soundId].play
 	_data.playerSequence.push(soundId)
 
-	e.target.classList.remove("game__pad--active")
+	setTimeout(() => {
+		e.target.classList.remove("game__pad--active")
 
-	const currentMove = _data.playerSequence.length - 1
+		const currentMove = _data.playerSequence.length - 1
 
-	if (_data.playerSequence[currentMove] !== _data.gameSequence[currentMove]) {
-		_data.playerCanPlay = false
-		disablePads()
-		resetOrPlayAgain()
-	} else if (currentMove === _data.gameSequence.length - 1) {
-		newColor()
-		playSequence()
-	}
+		if (_data.playerSequence[currentMove] !== _data.gameSequence[currentMove]) {
+			_data.playerCanPlay = false
+			disablePads()
+			resetOrPlayAgain()
+		} else if (currentMove === _data.gameSequence.length - 1) {
+			newColor()
+			playSequence()
+		}
 
-	waitForPlayerClick()
+		waitForPlayerClick()
+	}, 250)
+
 }
 
 _gui.pads.forEach(pad => {
@@ -125,6 +130,8 @@ const playSequence = () => {
 	_data.playerSequence = []
 	_data.playerCanPlay = false
 
+	changePadCursor("auto")
+
 	const interval = setInterval(() => {
 		if (!_data.gameOn) {
 			clearInterval(interval)
@@ -137,6 +144,7 @@ const playSequence = () => {
 				clearInterval(interval)
 				disablePads()
 				waitForPlayerClick()
+				changePadCursor("pointer")
 				_data.playerCanPlay = true
 				return
 			}
@@ -214,7 +222,9 @@ const resetOrPlayAgain = () => {
 }
 
 const changePadCursor = (cursorType) => {
-
+	_gui.pads.forEach(pad => {
+		pad.style.cursor = cursorType
+	})
 }
 
 const disablePads = () => {
